@@ -9,3 +9,7 @@ To set up AKS, the following Azure resources are required:
 1. **Resource Group**: `rg-demo`
 2. **Virtual Network**: `vnet-aks-demo`
 3. **Log Analytics Workspace**: `log-aks-demo`
+
+## Utilizing ASP.NET Core Identity
+
+Instead of using a sample web app that typically displays a homepage, we will utilize ASP.NET Core Identity. This approach allows us to be more productive by implementing authentication and user management features within our .NET application.
