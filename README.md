@@ -27,7 +27,7 @@ To set up AKS, the following Azure resources are required:
 
 ### 2. ASP.NET Core Identity Framework
 
-Instead of using a sample web app that typically displays a homepage, we will utilize ASP.NET Core Identity. This approach allows us to be more productive by implementing authentication and user management features within our .NET application. You can learn more about ASP.NET Core Identity [here](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-8.0&tabs=visual-studio)
+Instead of using a sample web app that typically displays a homepage, we will utilize ASP.NET Core Identity. This approach allows us to be more productive by implementing authentication and user management features within our .NET application. You can learn more about ASP.NET Core Identity [here](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity?view=aspnetcore-8.0&tabs=visual-studio). Additionally, you can follow the training material for ASP.NET Core Identity [here](https://learn.microsoft.com/en-us/training/modules/secure-aspnet-core-identity/).
 
 ### 3. Obtaining Free SSL/TLS with Let's Encrypt
 If there is still time, we will cover using Let's Encrypt to obtain free SSL/TLS certificates for your application. Additionally, we will use cert-manager to automatically renew the SSL/TLS certificates.
