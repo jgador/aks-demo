@@ -52,5 +52,5 @@ jobs:
       docker login crcebuaksdemo.azurecr.io -u crcebuaksdemo -p $REGISTRY_SECRET
       docker push crcebuaksdemo.azurecr.io/aks.demo:latest
     displayName: 'Push Docker to Registry'
-	env:
+    env:
       REGISTRY_SECRET: $(registry-username)
