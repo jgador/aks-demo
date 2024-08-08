@@ -46,5 +46,5 @@ jobs:
         echo 'Setting Build.BuildNumber to current version.'
         echo '##vso[build.updatebuildnumber]$(ImageVersion)'
 
-  - bash: docker build -f Dockerfile --tag crcebuaksdemo.azurecr.io/aks.demo:latest --no-cache
+  - bash: docker build -f Dockerfile --tag crcebuaksdemo.azurecr.io/aks.demo:latest --no-cache .
     displayName: 'Build Docker Image'
