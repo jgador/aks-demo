@@ -49,6 +49,8 @@ jobs:
     displayName: 'Build Docker Image'
 
   - bash: |
-      docker login crcebuaksdemo.azurecr.io -u $(registry-username) -p $(registry-password)
+      docker login crcebuaksdemo.azurecr.io -u crcebuaksdemo -p $REGISTRY_SECRET
       docker push crcebuaksdemo.azurecr.io/aks.demo:latest
     displayName: 'Push Docker to Registry'
+	env:
+      REGISTRY_SECRET: $(registry-username)
