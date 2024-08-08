@@ -6,7 +6,8 @@ trigger:
 jobs:
 - job: 'build_aks_demo'
   displayName: 'Build aks-demo'
-  pool: 'ubuntu-22.04'
+  pool:
+    vmImage: 'ubuntu-22.04'  
   steps:
   - checkout: self
     persistCredentials: true
