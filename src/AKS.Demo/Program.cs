@@ -1,5 +1,6 @@
 using AKS.Demo.Areas.Identity.Data;
 using AKS.Demo.Areas.Identity.Data.Configurations;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 
 namespace AKS.Demo
@@ -14,6 +15,8 @@ namespace AKS.Demo
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
             builder.Services.AddRazorPages();
+
+            builder.Services.AddHealthChecks();
 
             var app = builder.Build();
 
@@ -33,7 +36,11 @@ namespace AKS.Demo
             app.UseAuthentication();
             app.UseAuthorization();
 
+            var options = new HealthCheckOptions { Predicate = _ => false };
+
             app.MapRazorPages();
+            app.MapHealthChecks("/health/ready", options);
+            app.MapHealthChecks("/health/live", options);
 
             await app.RunAsync().ConfigureAwait(false);
         }
