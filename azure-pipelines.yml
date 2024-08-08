@@ -4,7 +4,7 @@ trigger:
     - refs/heads/*
 
 jobs:
-- job: 'build-aks-demo'
+- job: 'build_aks_demo'
   displayName: 'Build aks-demo'
   pool: 'ubuntu-22.04'
   steps:
