@@ -16,7 +16,6 @@ jobs:
     persistCredentials: true
     fetchDepth: 0
     
-
   - task: UseDotNet@2
     displayName: 'Install .NET 8'
     inputs:
@@ -48,3 +47,8 @@ jobs:
 
   - bash: docker build -f Dockerfile --tag crcebuaksdemo.azurecr.io/aks.demo:latest --no-cache .
     displayName: 'Build Docker Image'
+
+  - bash: |
+      docker login crcebuaksdemo.azurecr.io -u $(registry-username) -p $(registry-password)
+      docker push crcebuaksdemo.azurecr.io/aks.demo:latest
+    displayName: 'Push Docker to Registry'
