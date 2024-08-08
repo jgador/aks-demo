@@ -12,8 +12,10 @@ jobs:
   
   steps:
   - checkout: self
-    persistCredentials: true
     displayName: 'Checkout'
+    persistCredentials: true
+    fetchDepth: 0
+    
 
   - task: UseDotNet@2
     displayName: 'Install .NET 8'
@@ -31,7 +33,7 @@ jobs:
       includePrerelease: true
 
   - task: gitversion/execute@0
-    displayName: Execute GitVersion
+    displayName: 'Execute GitVersion'
     inputs:
       useConfigFile: true
       configFilePath: 'GitVersion.yml'
