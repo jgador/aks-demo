@@ -3,7 +3,7 @@ next-version: 1.0.0
 branches:
   main:
     regex: ^master$|^main$
-    is-main-branch: true
+    tag: preview
     increment: Minor
 ignore:
   sha: []
