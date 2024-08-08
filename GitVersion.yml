@@ -1,0 +1,10 @@
+mode: Mainline
+next-version: 1.0.0
+branches:
+  main:
+    regex: ^master$|^main$
+    is-main-branch: true
+    increment: Minor
+ignore:
+  sha: []
+update-build-number: true
