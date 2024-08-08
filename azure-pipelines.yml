@@ -1,0 +1,13 @@
+trigger:
+  branches:
+    include:
+    - refs/heads/*
+
+jobs:
+- job: 'build-aks-demo'
+  displayName: 'Build aks-demo'
+  pool: 'ubuntu-22.04'
+  steps:
+  - checkout: self
+    persistCredentials: true
+	displayName: 'Checkout'
