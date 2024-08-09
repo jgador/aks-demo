@@ -1,79 +1,56 @@
-# Deploy to Azure Kubernetes Service
-# Build and push image to Azure Container Registry; Deploy to Azure Kubernetes Service
-# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
-
 trigger:
-- main
+  branches:
+    include:
+    - main
 
-resources:
-- repo: self
+jobs:
+- job: 'build_aks_demo'
+  displayName: 'Build aks-demo'
 
-variables:
+  pool:
+    vmImage: 'ubuntu-22.04'  
+  
+  steps:
+  - checkout: self
+    displayName: 'Checkout'
+    persistCredentials: true
+    fetchDepth: 0
+    
+  - task: UseDotNet@2
+    displayName: 'Install .NET 8'
+    inputs:
+      version: '8.x'
 
-  # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: 'c9697a1a-ef11-4a3c-8f2c-0ad2c4bf34bc'
-  imageRepository: 'aksdemo'
-  containerRegistry: 'crcebuaksdemo.azurecr.io'
-  dockerfilePath: '**/Dockerfile'
-  tag: '$(Build.BuildId)'
-  imagePullSecret: 'crcebuaksdemo2770beef-auth'
+  - bash: |
+      dotnet restore
+    displayName: 'Run dotnet restore'
 
-  # Agent VM image name
-  vmImageName: 'ubuntu-latest'
+  - task: gitversion/setup@0
+    displayName: 'Setup GitVersion'
+    inputs:
+      versionSpec: '5.x'
+      includePrerelease: true
 
+  - task: gitversion/execute@0
+    displayName: 'Execute GitVersion'
+    inputs:
+      useConfigFile: true
+      configFilePath: 'GitVersion.yml'
 
-stages:
-- stage: Build
-  displayName: Build stage
-  jobs:
-  - job: Build
-    displayName: Build
-    pool:
-      vmImage: $(vmImageName)
-    steps:
-    - task: Docker@2
-      displayName: Build and push an image to container registry
-      inputs:
-        command: buildAndPush
-        repository: $(imageRepository)
-        dockerfile: $(dockerfilePath)
-        containerRegistry: $(dockerRegistryServiceConnection)
-        tags: |
-          $(tag)
+  - task: Bash@3
+    displayName: 'Set Version'
+    inputs:
+      targetType: 'inline'
+      script: |
+        echo 'Setting Build.BuildNumber to current version.'
+        echo '##vso[build.updatebuildnumber]$(ImageVersion)'
 
-    - upload: manifests
-      artifact: manifests
+  - bash: docker build -f Dockerfile --tag crcebuaksdemo.azurecr.io/aks.demo:latest --no-cache .
+    displayName: 'Build Docker Image'
 
-- stage: Deploy
-  displayName: Deploy stage
-  dependsOn: Build
-
-  jobs:
-  - deployment: Deploy
-    displayName: Deploy
-    pool:
-      vmImage: $(vmImageName)
-    environment: 'jgadoraksdemo-8497.demo'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: KubernetesManifest@0
-            displayName: Create imagePullSecret
-            inputs:
-              action: createSecret
-              secretName: $(imagePullSecret)
-              dockerRegistryEndpoint: $(dockerRegistryServiceConnection)
-
-          - task: KubernetesManifest@0
-            displayName: Deploy to Kubernetes cluster
-            inputs:
-              action: deploy
-              manifests: |
-                $(Pipeline.Workspace)/manifests/deployment.yml
-                $(Pipeline.Workspace)/manifests/service.yml
-              imagePullSecrets: |
-                $(imagePullSecret)
-              containers: |
-                $(containerRegistry)/$(imageRepository):$(tag)
-
+  - bash: |
+      # docker login crcebuaksdemo.azurecr.io -u crcebuaksdemo -p $REGISTRY_SECRET
+      docker push crcebuaksdemo.azurecr.io/aks.demo:latest
+    displayName: 'Push Docker to Registry'
+    env:
+      REGISTRY_SECRET: $(registry-username)
