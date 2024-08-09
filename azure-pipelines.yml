@@ -8,8 +8,11 @@ jobs:
   displayName: 'Build aks-demo'
 
   pool:
-    vmImage: 'ubuntu-22.04'  
+    vmImage: 'ubuntu-22.04'
   
+  variables:
+  - group: aks-demo-vars
+
   steps:
   - checkout: self
     displayName: 'Checkout'
