@@ -12,6 +12,10 @@ jobs:
   
   variables:
   - group: aks-demo-vars
+  - name: ImageVersion
+    value: '$(GitVersion.InformationalVersion)'
+  - name: ChartPath
+    value: '$(Build.SourcesDirectory)/src/AKS.Demo/charts/aks-demo'
 
   steps:
   - checkout: self
@@ -61,5 +65,13 @@ jobs:
     inputs:
       helmVersionToInstall: 3.1.0
 
-  - bash: helm package --version latest --destination $(Build.ArtifactStagingDirectory) '$(Build.SourcesDirectory)/src/AKS.Demo/charts/aks-demo'
+  - bash: helm package --version $(ImageVersion) --destination $(Build.ArtifactStagingDirectory) $(ChartPath)
     displayName: 'Package Helm Chart'
+
+  - bash: az acr helm push -n cebuaksdemo.azurecr.io -u $(registry.username) -p $(registry.password) $(Build.ArtifactStagingDirectory)/aks-demo-$(ImageVersion).tgz --force
+    displayName: 'Push Helm Chart'
+
+  - task: CopyFiles@2
+    displayName: 'Copy Values Files'
+    inputs:
+      sourceFolder: $(ChartPath)
