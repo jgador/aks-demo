@@ -34,13 +34,5 @@ spec:
             value: "{{ .Values.service.port }}"
           - name: "ASPNETCORE_FORWARDEDHEADERS_ENABLED"
             value: "true"
-          livenessProbe:
-            httpGet:
-              path: /health/live
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /health/ready
-              port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
