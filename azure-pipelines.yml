@@ -13,7 +13,7 @@ jobs:
   variables:
   - group: aks-demo-vars
   - name: ImageVersion
-    value: '$(GitVersion.InformationalVersion)'
+    value: '$(GitVersion.FullSemVer)'
   - name: ChartPath
     value: '$(Build.SourcesDirectory)/src/AKS.Demo/charts/aks-demo'
 
@@ -52,12 +52,12 @@ jobs:
         echo 'Setting Build.BuildNumber to current version.'
         echo '##vso[build.updatebuildnumber]$(ImageVersion)'
 
-  - bash: docker build -f Dockerfile --tag cebuaksdemo.azurecr.io/aks.demo:latest --no-cache .
+  - bash: docker build -f Dockerfile --tag cebuaksdemo.azurecr.io/aks.demo:$(ImageVersion) --no-cache .
     displayName: 'Build Docker Image'
 
   - bash: |
       echo $(registry.password) | docker login cebuaksdemo.azurecr.io -u $(registry.username) --password-stdin
-      docker push cebuaksdemo.azurecr.io/aks.demo:latest
+      docker push cebuaksdemo.azurecr.io/aks.demo:$(ImageVersion)
     displayName: 'Push Docker to Registry'
 
   - task: HelmInstaller@1
