@@ -16,7 +16,7 @@ namespace AKS.Demo
 
             builder.Services.AddRazorPages();
 
-            // builder.Services.AddHealthChecks();
+            builder.Services.AddHealthChecks();
 
             var app = builder.Build();
 
@@ -39,8 +39,8 @@ namespace AKS.Demo
             var options = new HealthCheckOptions { Predicate = _ => false };
 
             app.MapRazorPages();
-            //app.MapHealthChecks("/health/ready", options);
-            //app.MapHealthChecks("/health/live", options);
+            app.MapHealthChecks("/health/ready", options);
+            app.MapHealthChecks("/health/live", options);
 
             await app.RunAsync().ConfigureAwait(false);
         }

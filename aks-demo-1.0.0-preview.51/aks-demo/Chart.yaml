@@ -2,4 +2,4 @@ apiVersion: v2
 description: A Helm chart for AKS Demo
 name: aks-demo
 type: application
-version: 1.0.0-preview.48
+version: 1.0.0-preview.51
