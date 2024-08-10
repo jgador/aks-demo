@@ -5,7 +5,7 @@ replicaCount: 1
 aspnetEnvironment: Production
 
 image:
-  repository: aks.demo:latest
+  repository: aks.demo:1.0.0-preview.48
   pullPolicy: Always
 
 service:
