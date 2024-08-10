@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "aks-demo.fullname" . }}
+  labels:
+    {{- include "aks-demo.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "aks-demo.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        timestamp: {{ now | quote }}
+      labels:
+        {{- include "aks-demo.selectorLabels" . | nindent 8 }}
+    spec:
+      imagePullSecrets: []
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          env:
+          - name: "ASPNETCORE_ENVIRONMENT"
+            value: {{ .Values.aspnetEnvironment }}
+          - name: "ASPNETCORE_HTTP_PORTS"
+            value: "{{ .Values.service.port }}"
+          - name: "ASPNETCORE_FORWARDEDHEADERS_ENABLED"
+            value: "true"
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
