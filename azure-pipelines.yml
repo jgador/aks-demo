@@ -55,3 +55,11 @@ jobs:
       echo $(registry.password) | docker login cebuaksdemo.azurecr.io -u $(registry.username) --password-stdin
       docker push cebuaksdemo.azurecr.io/aks.demo:latest
     displayName: 'Push Docker to Registry'
+
+  - task: HelmInstaller@1
+    displayName: 'Install Helm'
+    inputs:
+      helmVersionToInstall: 3.1.0
+
+  - bash: helm package --version latest --destination $(Build.ArtifactStagingDirectory) '$(Build.SourcesDirectory)/src/AKS.Demo/charts/aks-demo'
+    displayName: 'Package Helm Chart'
