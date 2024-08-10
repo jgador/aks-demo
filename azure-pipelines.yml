@@ -75,3 +75,10 @@ jobs:
     displayName: 'Copy Values Files'
     inputs:
       sourceFolder: $(ChartPath)
+      contents: '*'
+      targetFolder: $(Build.ArtifactStagingDirectory)
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Values Files'
+    inputs:
+      pathtoPublish: '$(Build.ArtifactStagingDirectory)'
